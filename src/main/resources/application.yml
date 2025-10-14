@@ -18,3 +18,8 @@ spring:
     init:
       mode: always
       encoding: UTF-8
+
+  jwt:
+    private-key: classpath:app.pub
+    public-key: classpath:app.key
+
