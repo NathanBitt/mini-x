@@ -18,10 +18,11 @@ public class Tweet {
     @CreationTimestamp
     private Instant postTime;
 
-    public Tweet(User user, String post, Instant postTime) {
+    private Tweet(){}
+
+    public Tweet(User user, String post) {
         this.user = user;
         this.post = post;
-        this.postTime = postTime;
     }
 
     public User getUser() {
