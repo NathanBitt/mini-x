@@ -40,6 +40,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST, "/users/new")
+                        .permitAll()
                         .requestMatchers(HttpMethod.POST, "/login")
                         .permitAll()
                         .anyRequest().authenticated())
