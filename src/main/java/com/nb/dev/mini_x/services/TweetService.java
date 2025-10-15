@@ -2,6 +2,7 @@ package com.nb.dev.mini_x.services;
 
 import com.nb.dev.mini_x.dtos.request.TweetRequest;
 import com.nb.dev.mini_x.entities.Tweet;
+import com.nb.dev.mini_x.enums.Values;
 import com.nb.dev.mini_x.repositories.TweetRepository;
 import com.nb.dev.mini_x.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -33,10 +34,16 @@ public class TweetService {
         var tweet = tweetRepository
                 .findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
+        var user = userRepository.findById(UUID.fromString(token.getName()));
 
+        var isAdmin = user
+                .get()
+                .getRoles()
+                .stream()
+                .anyMatch(role -> role.getName().equalsIgnoreCase(Values.ADMIN.name()));
         var isAuthor = tweet.getUser().getId().equals(UUID.fromString(token.getName()));
 
-        if(isAuthor){
+        if(isAuthor || isAdmin){
             tweetRepository.deleteById(id);
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
