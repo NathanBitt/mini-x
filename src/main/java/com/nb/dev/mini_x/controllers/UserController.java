@@ -6,10 +6,10 @@ import com.nb.dev.mini_x.services.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -27,4 +27,13 @@ public class UserController {
         var newUser = userService.newUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
+
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity<List<UserResponse>> listUsers(){
+        var userList = userService.listUsers();
+        return ResponseEntity.status(HttpStatus.OK).body(userList);
+    }
+
+
 }

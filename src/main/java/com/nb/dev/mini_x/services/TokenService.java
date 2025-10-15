@@ -2,6 +2,7 @@ package com.nb.dev.mini_x.services;
 
 import com.nb.dev.mini_x.dtos.request.LoginRequest;
 import com.nb.dev.mini_x.dtos.response.LoginResponse;
+import com.nb.dev.mini_x.entities.Role;
 import com.nb.dev.mini_x.repositories.UserRepository;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
@@ -32,11 +34,19 @@ public class TokenService {
         }
         var now = Instant.now();
         var expiresIn = 300L;
+        var scopes = user
+                .get()
+                .getRoles()
+                .stream()
+                .map(Role::getName)
+                .collect(Collectors.joining(" "));
+
         var claims = JwtClaimsSet.builder()
                 .issuer("mini-x backend")
                 .subject(user.get().getId().toString())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiresIn))
+                .claim("scope", scopes)
                 .build();
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
