@@ -1,10 +1,14 @@
 package com.nb.dev.mini_x.services;
 
 import com.nb.dev.mini_x.dtos.request.TweetRequest;
+import com.nb.dev.mini_x.dtos.response.FeedResponse;
+import com.nb.dev.mini_x.dtos.response.FeedTweetResponse;
 import com.nb.dev.mini_x.entities.Tweet;
 import com.nb.dev.mini_x.enums.Values;
 import com.nb.dev.mini_x.repositories.TweetRepository;
 import com.nb.dev.mini_x.repositories.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -48,5 +52,21 @@ public class TweetService {
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
 
+    }
+
+    public FeedResponse feed(int pageNumber, int pageSize){
+
+      var tweets =  tweetRepository
+                .findAll(PageRequest.of(
+                        pageNumber,
+                        pageSize,
+                        Sort.Direction.DESC, "postTime"))
+                .stream()
+                .map(tweet -> new FeedTweetResponse(
+                        tweet.getId(),
+                        tweet.getPost(),
+                        tweet.getUser().getUserName()
+                )).toList();
+      return new FeedResponse(tweets, pageNumber, pageSize, 10, tweets.size());
     }
 }

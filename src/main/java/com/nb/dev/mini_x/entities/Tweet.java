@@ -48,4 +48,8 @@ public class Tweet {
     public void setPostTime(Instant postTime) {
         this.postTime = postTime;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

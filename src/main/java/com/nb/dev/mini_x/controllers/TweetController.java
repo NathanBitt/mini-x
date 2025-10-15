@@ -1,6 +1,7 @@
 package com.nb.dev.mini_x.controllers;
 
 import com.nb.dev.mini_x.dtos.request.TweetRequest;
+import com.nb.dev.mini_x.dtos.response.FeedResponse;
 import com.nb.dev.mini_x.services.TweetService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,17 @@ public class TweetController {
     public ResponseEntity<Void> deleteTweet(@PathVariable Long id, JwtAuthenticationToken token){
         tweetService.deleteTweet(id, token);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
+    }
+
+    @GetMapping("/feed")
+    public ResponseEntity<FeedResponse> feed (@RequestParam(value = "page", defaultValue = "0") int page,
+                                              @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
+
+        var feed = tweetService.feed(page, pageSize);
+
+        return ResponseEntity.status(HttpStatus.OK).body(feed);
+
 
     }
 
