@@ -6,7 +6,7 @@ import com.nb.dev.mini_x.dtos.response.FeedTweetResponse;
 import com.nb.dev.mini_x.entities.Tweet;
 import com.nb.dev.mini_x.enums.Values;
 import com.nb.dev.mini_x.exceptions.TweetNotFoundException;
-import com.nb.dev.mini_x.exceptions.UnauthorizedDeletionExeption;
+import com.nb.dev.mini_x.exceptions.UnauthorizedDeletionException;
 import com.nb.dev.mini_x.repositories.TweetRepository;
 import com.nb.dev.mini_x.repositories.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -51,7 +51,7 @@ public class TweetService {
 
         if(isAuthor || isAdmin){
             tweetRepository.deleteById(id);
-        } else throw new UnauthorizedDeletionExeption("voce não tem permisão para deletar esse tweet");
+        } else throw new UnauthorizedDeletionException("voce não tem permisão para deletar esse tweet");
 
 
     }
