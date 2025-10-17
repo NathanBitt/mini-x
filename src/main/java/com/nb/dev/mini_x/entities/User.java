@@ -2,6 +2,8 @@ package com.nb.dev.mini_x.entities;
 
 import com.nb.dev.mini_x.dtos.request.LoginRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;

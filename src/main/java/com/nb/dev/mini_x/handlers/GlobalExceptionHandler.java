@@ -3,10 +3,12 @@ package com.nb.dev.mini_x.handlers;
 import com.nb.dev.mini_x.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -62,6 +64,24 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exBody);
 
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<DefaultErrorBody> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        String errors = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        DefaultErrorBody exBody = new DefaultErrorBody();
+        exBody.setTimesTamp(LocalDateTime.now());
+        exBody.setStatus(HttpStatus.BAD_REQUEST.value());
+        exBody.setError("validation error");
+        exBody.setMessage(errors);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exBody);
+    }
+
+
 
 }
 

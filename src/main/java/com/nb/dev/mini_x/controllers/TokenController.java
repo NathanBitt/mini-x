@@ -3,6 +3,7 @@ package com.nb.dev.mini_x.controllers;
 import com.nb.dev.mini_x.dtos.request.LoginRequest;
 import com.nb.dev.mini_x.dtos.response.LoginResponse;
 import com.nb.dev.mini_x.services.TokenService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.JwtEncoder;

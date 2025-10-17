@@ -4,6 +4,7 @@ import com.nb.dev.mini_x.dtos.request.UserRequest;
 import com.nb.dev.mini_x.dtos.response.UserResponse;
 import com.nb.dev.mini_x.services.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +24,7 @@ public class UserController {
 
     @Transactional
     @PostMapping("/new")
-    public ResponseEntity<UserResponse> newUser(@RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> newUser(@RequestBody @Valid UserRequest userRequest){
         UserResponse newUser = userService.newUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
