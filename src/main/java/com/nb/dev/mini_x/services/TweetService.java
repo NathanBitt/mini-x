@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,23 +30,24 @@ public class TweetService {
     public void newTweet(TweetRequest tweetRequest, JwtAuthenticationToken token){
 
         var user =  userRepository.findById(UUID.fromString(token.getName()));
-        var tweet = new Tweet(user.get(), tweetRequest.post());
+        Tweet tweet = new Tweet(user.get(), tweetRequest.post());
         tweetRepository.save(tweet);
 
     }
 
     public void deleteTweet(Long id, JwtAuthenticationToken token){
-        var tweet = tweetRepository
+        Tweet tweet = tweetRepository
                 .findById(id).orElseThrow(() ->
                 new ResponseStatusException(HttpStatus.NOT_FOUND));
         var user = userRepository.findById(UUID.fromString(token.getName()));
 
-        var isAdmin = user
+        boolean isAdmin = user
                 .get()
                 .getRoles()
                 .stream()
                 .anyMatch(role -> role.getName().equalsIgnoreCase(Values.ADMIN.name()));
-        var isAuthor = tweet.getUser().getId().equals(UUID.fromString(token.getName()));
+
+        boolean isAuthor = tweet.getUser().getId().equals(UUID.fromString(token.getName()));
 
         if(isAuthor || isAdmin){
             tweetRepository.deleteById(id);
@@ -56,7 +58,7 @@ public class TweetService {
 
     public FeedResponse feed(int pageNumber, int pageSize){
 
-      var tweets =  tweetRepository
+      List<FeedTweetResponse> tweets =  tweetRepository
                 .findAll(PageRequest.of(
                         pageNumber,
                         pageSize,
@@ -67,6 +69,7 @@ public class TweetService {
                         tweet.getPost(),
                         tweet.getUser().getUserName()
                 )).toList();
+
       return new FeedResponse(tweets, pageNumber, pageSize, 10, tweets.size());
     }
 }

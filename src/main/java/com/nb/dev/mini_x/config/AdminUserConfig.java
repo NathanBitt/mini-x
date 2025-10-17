@@ -1,5 +1,6 @@
 package com.nb.dev.mini_x.config;
 
+import com.nb.dev.mini_x.entities.Role;
 import com.nb.dev.mini_x.entities.User;
 import com.nb.dev.mini_x.enums.Values;
 import com.nb.dev.mini_x.repositories.RoleRepository;
@@ -24,13 +25,14 @@ public class AdminUserConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        var roleAdmin = roleRepository.findByName(Values.ADMIN.name().toLowerCase());
+        Role roleAdmin = roleRepository.findByName(Values.ADMIN.name().toLowerCase());
         var userAdmin = userRepository.findByUserName("admin");
+
         userAdmin.ifPresentOrElse(
                 user -> {System.out.print("admin já existe");},
 
                 () -> {
-                    var user = new User();
+                    User user = new User();
                     user.setUserName("admin");
                     user.setPassword(pwEncoder.encode("123"));
                     user.setRoles(Set.of(roleAdmin));

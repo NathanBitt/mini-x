@@ -2,6 +2,7 @@ package com.nb.dev.mini_x.services;
 
 import com.nb.dev.mini_x.dtos.request.UserRequest;
 import com.nb.dev.mini_x.dtos.response.UserResponse;
+import com.nb.dev.mini_x.entities.Role;
 import com.nb.dev.mini_x.entities.User;
 import com.nb.dev.mini_x.enums.Values;
 import com.nb.dev.mini_x.repositories.RoleRepository;
@@ -29,12 +30,12 @@ public class UserService {
 
     public UserResponse newUser(UserRequest userRequest){
 
-        var basicRole = roleRepository.findByName(Values.BASIC.name().toLowerCase());
-        var userInPresent = userRepository.findByUserName(userRequest.userName());
+        Role basicRole = roleRepository.findByName(Values.BASIC.name().toLowerCase());
+        var userNameInDb = userRepository.findByUserName(userRequest.userName());
 
-        if(userInPresent.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        if(userNameInDb.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
 
-        var newUser = new User();
+        User newUser = new User();
         newUser.setUserName(userRequest.userName());
         newUser.setPassword(pwEncoder.encode(userRequest.password()));
         newUser.setRoles(Set.of(basicRole));
@@ -44,7 +45,7 @@ public class UserService {
     }
 
     public List<UserResponse> listUsers(){
-        var userList = userRepository.findAll();
+        List<User> userList = userRepository.findAll();
 
         return userList.stream().map(
                 user -> new UserResponse(

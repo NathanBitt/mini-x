@@ -34,7 +34,7 @@ public class TweetController {
     public ResponseEntity<FeedResponse> feed (@RequestParam(value = "page", defaultValue = "0") int page,
                                               @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
 
-        var feed = tweetService.feed(page, pageSize);
+        FeedResponse feed = tweetService.feed(page, pageSize);
 
         return ResponseEntity.status(HttpStatus.OK).body(feed);
 

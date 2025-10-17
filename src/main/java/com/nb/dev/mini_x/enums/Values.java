@@ -4,7 +4,7 @@ public enum Values {
     ADMIN(1L),
     BASIC(2L);
 
-   Long id;
+   final Long id;
 
     Values(Long id) {
         this.id = id;

@@ -24,14 +24,14 @@ public class UserController {
     @Transactional
     @PostMapping("/new")
     public ResponseEntity<UserResponse> newUser(@RequestBody UserRequest userRequest){
-        var newUser = userService.newUser(userRequest);
+        UserResponse newUser = userService.newUser(userRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('SCOPE_admin')")
     public ResponseEntity<List<UserResponse>> listUsers(){
-        var userList = userService.listUsers();
+        List<UserResponse> userList = userService.listUsers();
         return ResponseEntity.status(HttpStatus.OK).body(userList);
     }
 

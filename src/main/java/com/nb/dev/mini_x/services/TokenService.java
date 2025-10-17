@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -29,19 +30,20 @@ public class TokenService {
 
     public LoginResponse login (LoginRequest loginRequest){
         var user = userRepository.findByUserName(loginRequest.userName());
+
         if (user.isEmpty() || !user.get().isLoginCorrect(loginRequest, pwEncoder)){
             throw new BadCredentialsException("user or password invalid");
         }
-        var now = Instant.now();
-        var expiresIn = 300L;
-        var scopes = user
+        Instant now = Instant.now();
+        long expiresIn = 300L;
+        String scopes = user
                 .get()
                 .getRoles()
                 .stream()
                 .map(Role::getName)
                 .collect(Collectors.joining(" "));
 
-        var claims = JwtClaimsSet.builder()
+        JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("mini-x backend")
                 .subject(user.get().getId().toString())
                 .issuedAt(now)
@@ -49,7 +51,7 @@ public class TokenService {
                 .claim("scope", scopes)
                 .build();
 
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+        String jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
         return new LoginResponse(jwtValue, expiresIn);
 
 
