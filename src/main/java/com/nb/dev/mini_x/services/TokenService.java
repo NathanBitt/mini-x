@@ -3,9 +3,8 @@ package com.nb.dev.mini_x.services;
 import com.nb.dev.mini_x.dtos.request.LoginRequest;
 import com.nb.dev.mini_x.dtos.response.LoginResponse;
 import com.nb.dev.mini_x.entities.Role;
-import com.nb.dev.mini_x.repositories.UserRepository;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.nb.dev.mini_x.exceptions.InvalidLoginExeption;
+import com.nb.dev.mini_x.repositories.UserRepository;import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -32,7 +31,7 @@ public class TokenService {
         var user = userRepository.findByUserName(loginRequest.userName());
 
         if (user.isEmpty() || !user.get().isLoginCorrect(loginRequest, pwEncoder)){
-            throw new BadCredentialsException("user or password invalid");
+            throw new InvalidLoginExeption("usuario ou senha invalido");
         }
         Instant now = Instant.now();
         long expiresIn = 300L;

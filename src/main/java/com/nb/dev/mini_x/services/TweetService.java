@@ -5,14 +5,14 @@ import com.nb.dev.mini_x.dtos.response.FeedResponse;
 import com.nb.dev.mini_x.dtos.response.FeedTweetResponse;
 import com.nb.dev.mini_x.entities.Tweet;
 import com.nb.dev.mini_x.enums.Values;
+import com.nb.dev.mini_x.exceptions.TweetNotFoundException;
+import com.nb.dev.mini_x.exceptions.UnauthorizedDeletionExeption;
 import com.nb.dev.mini_x.repositories.TweetRepository;
 import com.nb.dev.mini_x.repositories.UserRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class TweetService {
     public void deleteTweet(Long id, JwtAuthenticationToken token){
         Tweet tweet = tweetRepository
                 .findById(id).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND));
+                new TweetNotFoundException("tweet não encontrado"));
         var user = userRepository.findById(UUID.fromString(token.getName()));
 
         boolean isAdmin = user
@@ -51,7 +51,7 @@ public class TweetService {
 
         if(isAuthor || isAdmin){
             tweetRepository.deleteById(id);
-        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        } else throw new UnauthorizedDeletionExeption("voce não tem permisão para deletar esse tweet");
 
 
     }

@@ -5,6 +5,7 @@ import com.nb.dev.mini_x.dtos.response.UserResponse;
 import com.nb.dev.mini_x.entities.Role;
 import com.nb.dev.mini_x.entities.User;
 import com.nb.dev.mini_x.enums.Values;
+import com.nb.dev.mini_x.exceptions.UserNameUnavailableException;
 import com.nb.dev.mini_x.repositories.RoleRepository;
 import com.nb.dev.mini_x.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class UserService {
         Role basicRole = roleRepository.findByName(Values.BASIC.name().toLowerCase());
         var userNameInDb = userRepository.findByUserName(userRequest.userName());
 
-        if(userNameInDb.isPresent()) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
+        if(userNameInDb.isPresent()) throw new UserNameUnavailableException("o nome " + userRequest.userName() + " já está em uso");
 
         User newUser = new User();
         newUser.setUserName(userRequest.userName());
