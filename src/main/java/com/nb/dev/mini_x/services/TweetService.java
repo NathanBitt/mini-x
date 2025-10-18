@@ -30,8 +30,9 @@ public class TweetService {
     public void newTweet(TweetRequest tweetRequest, JwtAuthenticationToken token){
 
         var user =  userRepository.findById(UUID.fromString(token.getName()));
-        Tweet tweet = new Tweet(user.get(), tweetRequest.post());
-        tweetRepository.save(tweet);
+
+            Tweet tweet = new Tweet(user.get(), tweetRequest.post());
+            tweetRepository.save(tweet);
 
     }
 

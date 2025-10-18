@@ -10,3 +10,15 @@ services:
       POSTGRES_USER: nb
       POSTGRES_PASSWORD: nb
       POSTGRES_DB: x_db
+
+  app:
+    build: .
+    container_name: x_app
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/x_db
+      SPRING_DATASOURCE_USERNAME: nb
+      SPRING_DATASOURCE_PASSWORD: nb
+    ports:
+      - "8080:8080"
