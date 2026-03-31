@@ -2,15 +2,13 @@ package com.nb.dev.mini_x.entities;
 
 import com.nb.dev.mini_x.dtos.request.LoginRequest;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "tbl_user")
+@Table(name = "tbl_users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,7 +25,8 @@ public class User {
     )
     private Set<Role> roles;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String userName, String password, Set<Role> roles) {
         this.userName = userName;
@@ -35,7 +34,7 @@ public class User {
         this.roles = roles;
     }
 
-    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder){
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
 
         return passwordEncoder.matches(loginRequest.password(), this.password);
     }
@@ -71,4 +70,5 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 }
