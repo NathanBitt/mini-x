@@ -13,6 +13,7 @@ O mini-x é uma API REST desenvolvida com **Spring Boot** que implementa uma ver
   - Validation
 - **PostgreSQL**
 - **Docker / Docker Compose**
+- **SvelteKit** (cliente web)
 
 ---
 
@@ -33,6 +34,41 @@ O mini-x é uma API REST desenvolvida com **Spring Boot** que implementa uma ver
 - Paginação
 - Autenticação/Autorização
 
+---
+
+## 💻 Cliente Web (Svelte)
+
+Este repositório também contém um cliente web em **SvelteKit** dentro da pasta `frontend/`, que consome a API do mini-x.
+
+### Requisitos
+
+- **Node.js** (versão LTS recomendada)
+- **npm** (ou pnpm/yarn, se preferir)
+
+### Como executar o cliente
+
+1. Acesse a pasta do frontend:
+
+   ```bash
+   cd frontend
+   ```
+
+2. Instale as dependências:
+
+   ```bash
+   npm install
+   ```
+
+3. Inicie o servidor de desenvolvimento:
+
+   ```bash
+   npm run dev
+   ```
+
+4. Abra o navegador no endereço indicado pelo terminal (por padrão `http://localhost:5173`).
+
+Certifique-se de que a API do mini-x esteja em execução (via Docker como recomendado abaixo, ou localmente) para que o cliente Svelte consiga se comunicar corretamente.
+
 
 ## 🚩 Exemplo de Endpoints
 
@@ -51,3 +87,5 @@ password: 123
 ### Docker (requisito)
 ```bash
 docker-compose up --build
+ou
+docker compose up --build
